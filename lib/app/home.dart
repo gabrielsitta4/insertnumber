@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:insertnumber/app/looknumber.dart';
 import 'package:uuid/uuid.dart';
 
@@ -15,6 +14,7 @@ class _HomePageState extends State<HomePage> {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
   var numberinsert = TextEditingController();
+  // ignore: prefer_typing_uninitialized_variables
   var snakbar;
 
   @override
