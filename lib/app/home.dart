@@ -33,6 +33,10 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.only(
                   top: 20, bottom: 20, left: 100, right: 100),
               child: TextFormField(
+                decoration: const InputDecoration(
+                  icon: Icon(Icons.numbers),
+                  hintText: "Digite o valor aqui",
+                ),
                 keyboardType: TextInputType.number,
                 controller: numberinsert,
               ),
@@ -41,14 +45,10 @@ class _HomePageState extends State<HomePage> {
               child: const Text("Inserir valor"),
               onPressed: () => {
                 sendData(),
-                snakbar = const SnackBar(
-                    content:
-                        Text('Numero inserido, va para a proxima pagina!')),
-                ScaffoldMessenger.of(context).showSnackBar(snakbar)
               },
             ),
             ElevatedButton(
-              child: const Text("Olhar numero!"),
+              child: const Text("OLHAR NUMERO"),
               onPressed: () => {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const LookPage())),
@@ -61,8 +61,18 @@ class _HomePageState extends State<HomePage> {
   }
 
   void sendData() {
-    String id = const Uuid().v1();
-    db.collection("numbers").doc(id).set({"number": numberinsert.text});
+    if (numberinsert.text.isEmpty) {
+      message('Nao foi possivel inserir');
+    } else {
+      String id = const Uuid().v1();
+      message('Valor inserido');
+      db.collection("numbers").doc(id).set({"number": numberinsert.text});
+    }
     numberinsert.clear();
+  }
+
+  void message(String message) {
+    snakbar = SnackBar(content: Text(message));
+    ScaffoldMessenger.of(context).showSnackBar(snakbar);
   }
 }

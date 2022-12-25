@@ -11,13 +11,14 @@ class LookPage extends StatefulWidget {
 
 class _LookPageState extends State<LookPage> {
   FirebaseFirestore db = FirebaseFirestore.instance;
-  List<String> listNumbers = [];
 
   @override
   void initState() {
     show();
     super.initState();
   }
+
+  List<String> listNumbers = [];
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +35,11 @@ class _LookPageState extends State<LookPage> {
             //           for (String s in listNumbers) Text(s),
             //         ],
             //       ),
+
             (listNumbers.isEmpty)
                 ? const Text("Nenhum numero registrado")
                 : Text(
-                    listNumbers.last.toString(),
+                    listNumbers.last,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 100,
@@ -59,7 +61,7 @@ class _LookPageState extends State<LookPage> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: const Text('Retornar !'),
+              child: const Text('RETORNAR'),
             ),
           ],
         ),
@@ -67,7 +69,7 @@ class _LookPageState extends State<LookPage> {
     );
   }
 
-  show() async {
+  Future show() async {
     QuerySnapshot query = await db.collection("numbers").get();
 
     listNumbers = [];
