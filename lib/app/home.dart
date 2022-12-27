@@ -18,6 +18,14 @@ class _HomePageState extends State<HomePage> {
   var snakbar;
 
   @override
+  void initState() {
+    show();
+    super.initState();
+  }
+
+  List<String> ids = [];
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
@@ -54,19 +62,36 @@ class _HomePageState extends State<HomePage> {
                     MaterialPageRoute(builder: (context) => const LookPage())),
               },
             ),
+            ElevatedButton(
+              child: const Text("Teste"),
+              onPressed: () => {show()},
+            ),
           ],
         ),
       ),
     );
   }
 
+  Future show() async {
+    await FirebaseFirestore.instance
+        .collection("numbers")
+        .get()
+        .then((value) => value.docs.forEach((element) {
+              ids.add(element.reference.id);
+              print(ids.last);
+            }));
+  }
+
   void sendData() {
     if (numberinsert.text.isEmpty) {
       message('Nao foi possivel inserir');
     } else {
-      String id = const Uuid().v1();
+      // String id = const Uuid().v1();
+      show();
+      int idd = int.parse(ids.last) + 1;
+      String iddd = idd.toString();
       message('Valor inserido');
-      db.collection("numbers").doc(id).set({"number": numberinsert.text});
+      db.collection("numbers").doc(iddd).set({"number": numberinsert.text});
     }
     numberinsert.clear();
   }
