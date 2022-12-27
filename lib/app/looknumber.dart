@@ -19,6 +19,7 @@ class _LookPageState extends State<LookPage> {
   }
 
   List<String> listNumbers = [];
+  late String _value = listNumbers.last;
 
   @override
   Widget build(BuildContext context) {
@@ -28,18 +29,32 @@ class _LookPageState extends State<LookPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // (listNumbers.isEmpty)
-            //     ? const Text("Nenhum numero registrado")
-            //     : Column(
-            //         children: [
-            //           for (String s in listNumbers) Text(s),
-            //         ],
-            //       ),
-
+            const Text("Numeros anteriores"),
+            SizedBox(
+              height: 50,
+              width: 60,
+              child: DropdownButtonFormField(
+                value: _value,
+                items: listNumbers.map((e) {
+                  return DropdownMenuItem(
+                    value: e,
+                    child: Text(e),
+                  );
+                }).toList(),
+                onChanged: (val) {
+                  setState(() {
+                    _value = val as String;
+                  });
+                },
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
             (listNumbers.isEmpty)
                 ? const Text("Nenhum numero registrado")
                 : Text(
-                    listNumbers.last,
+                    _value,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 100,
@@ -47,7 +62,7 @@ class _LookPageState extends State<LookPage> {
                   ),
             Text(
               NumberToWordsEnglish.convert(
-                int.parse(listNumbers.last),
+                int.parse(_value),
               ),
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
@@ -69,7 +84,7 @@ class _LookPageState extends State<LookPage> {
     );
   }
 
-  Future show() async {
+  void show() async {
     QuerySnapshot query = await db.collection("numbers").get();
 
     listNumbers = [];
