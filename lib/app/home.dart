@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:insertnumber/app/looknumber.dart';
-import 'package:uuid/uuid.dart';
+// import 'package:uuid/uuid.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    show();
+    getID();
     super.initState();
   }
 
@@ -62,24 +62,22 @@ class _HomePageState extends State<HomePage> {
                     MaterialPageRoute(builder: (context) => const LookPage())),
               },
             ),
-            ElevatedButton(
-              child: const Text("Teste"),
-              onPressed: () => {show()},
-            ),
           ],
         ),
       ),
     );
   }
 
-  Future show() async {
-    await FirebaseFirestore.instance
-        .collection("numbers")
-        .get()
-        .then((value) => value.docs.forEach((element) {
+  Future getID() async {
+    await FirebaseFirestore.instance.collection("numbers").get().then(
+          // ignore: avoid_function_literals_in_foreach_calls
+          (value) => value.docs.forEach(
+            (element) {
               ids.add(element.reference.id);
-              print(ids.last);
-            }));
+            },
+          ),
+        );
+    print(ids.last);
   }
 
   void sendData() {
@@ -87,11 +85,13 @@ class _HomePageState extends State<HomePage> {
       message('Nao foi possivel inserir');
     } else {
       // String id = const Uuid().v1();
-      show();
-      int idd = int.parse(ids.last) + 1;
-      String iddd = idd.toString();
+      getID();
+      int idInt = int.parse(ids.last) + 1;
+      String finalId = idInt.toString();
       message('Valor inserido');
-      db.collection("numbers").doc(iddd).set({"number": numberinsert.text});
+      db.collection("numbers").doc(finalId).set(
+        {"number": numberinsert.text},
+      );
     }
     numberinsert.clear();
   }
